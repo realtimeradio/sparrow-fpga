@@ -93,9 +93,8 @@ if __name__ == '__main__':
     sys.stdout.flush()
     for i in range(opts.ncores):
         print('Configuring core gbe%d'%i)
-        core_ip = (i + 1) % 4 # when corner-turning is off. Core i sends to IP i
         gbe = fpga.gbes['gbe%d' % i]
-        gbe.configure_core(mac_base+core_ip,ip2str(base_ip+core_ip),fabric_port)
+        gbe.configure_core(mac_base+i,ip2str(base_ip+i),fabric_port)
         for j in range(opts.ncores):
             gbe.set_single_arp_entry(ip2str(base_ip+j), mac_base+j)
 
