@@ -54,7 +54,7 @@ class Ads5404():
         self.write_spi(0x00, 0x8000) # 4 bit SPI
         self.write_spi(0x3A, 0x0E1B) # Internal 100 ohm LVDS termination
         self.write_spi(0x66, 0x2FFF) # Disable output buffers on unused chan A pins and connected syncout
-        self.write_spi(0x67, 0x0FFF) # Disable output buffers on unused chan B pins and N/C syncout
+        self.write_spi(0x67, 0x2FFF) # Disable output buffers on unused chan B pins and N/C syncout
         self.write_spi(0x01, 0x8202) # Corr enable; HP; 2's complement
         self.write_spi(0x03, 0x4B18) # clear core cal chan A
         self.write_spi(0x1A, 0x4B18) # clear core cal chan B
@@ -137,10 +137,11 @@ def get_data(r, signed=True):
         fmt = 'h'
     else:
         fmt = 'H'
-    x, _ = r.snapshots.snapshot0.read_raw(man_trig=True)
-    d0 = np.array(unpack('>%d%s' % (x['length']//2, fmt), x['data']))
-    x, _ = r.snapshots.snapshot1.read_raw(man_trig=True)
-    d1 = np.array(unpack('>%d%s' % (x['length']//2, fmt), x['data']))
+    r.snapshots.snapshot0.arm() # Arms both
+    x, _ = r.snapshots.snapshot0.read_raw(arm=False)
+    d0 = np.array(unpack('>%d%s' % (x['length']//2, fmt), x['data'])) // 2**4
+    x, _ = r.snapshots.snapshot1.read_raw(arm=False)
+    d1 = np.array(unpack('>%d%s' % (x['length']//2, fmt), x['data'])) // 2**4
     return d0, d1
 
 def scan_delays(a):
