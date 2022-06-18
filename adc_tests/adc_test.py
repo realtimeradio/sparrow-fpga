@@ -50,14 +50,39 @@ class Ads5404():
         sleep(0.001)
         self.cfpga.write_int(self._get_regname(self._reg_rst), 0)
 
-    def strobe_mode(self):
+    def init(self):
+        self.write_spi(0x00, 0x8000) # 4 bit SPI
+        self.write_spi(0x3A, 0x0E1B) # Internal 100 ohm LVDS termination
+        self.write_spi(0x66, 0x2FFF) # Disable output buffers on unused chan A pins and connected syncout
+        self.write_spi(0x67, 0x0FFF) # Disable output buffers on unused chan B pins and N/C syncout
+        self.write_spi(0x01, 0x8202) # Corr enable; HP; 2's complement
+        self.write_spi(0x03, 0x4B18) # clear core cal chan A
+        self.write_spi(0x1A, 0x4B18) # clear core cal chan B
+        self.write_spi(0x03, 0x0B18) # enable core cal chan A
+        self.write_spi(0x1A, 0x0B18) # enable core cal chan B
+
+    def get_temp(self):
+        return self.read_spi(0x2B)
+
+    def toggle_mode(self, pattern_type=0, pattern=[0x0, 0x1, 0x2]):
+        assert pattern_type in [0, 1, 2]
         self.write_spi(0x01, 0x0)
-        self.write_spi(0x3C, 0x9554)
-        self.write_spi(0x3D, 0x2AA8)
-        self.write_spi(0x3E, 0x1554)
+        if pattern_type == 0:
+            self.write_spi(0x3C, 0x9554)
+            self.write_spi(0x3D, 0x2AA8)
+            self.write_spi(0x3E, 0x1554)
+        elif pattern_type == 1:
+            self.write_spi(0x3C, 0xBFFC)
+            self.write_spi(0x3D, 0x0)
+            self.write_spi(0x3E, 0x3FFC)
+        elif pattern_type == 2:
+            self.write_spi(0x3C, (1<<15) + (pattern[0]<<2))
+            self.write_spi(0x3D, (0<<15) + (pattern[1]<<2))
+            self.write_spi(0x3E, (0<<15) + (pattern[2]<<2))
+        
 
     def data_mode(self):
-        self.write_spi(0x01, 0x01)
+        self.write_spi(0x01, 0x2)
         self.write_spi(0x3C, 0x0)
         self.write_spi(0x3D, 0x0)
         self.write_spi(0x3E, 0x0)
@@ -119,10 +144,10 @@ def get_data(r, signed=True):
     return d0, d1
 
 def scan_delays(a):
-    a.strobe_mode()
-    for i in range(64):
+    a.toggle_mode()
+    for i in range(32):
         a.set_delay(i)
         d0, d1 = get_data(a.cfpga, signed=False)
-        err0 = a.test_strobe(d0)
-        err1 = a.test_strobe(d1)
+        err0 = a.test_strobe(d0, bitwise=True)
+        err1 = a.test_strobe(d1, bitwise=True)
         print(i, err0, err1)
