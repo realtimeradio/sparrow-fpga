@@ -129,7 +129,27 @@ class Ads5404():
             return errcnt
 
     def get_pll_lock(self):
-        return self.cfpga.read_int(self._get_regname(self._reg_pll_lock))
+        return self.cfpga.read_int(self._get_regname(self._reg_pll_lock)) & 1
+
+    def get_adc_clock_rates(self):
+        dt = 0.1
+        raw0 = self.cfpga.read_int(self._get_regname(self._reg_pll_lock))
+        sleep(dt)
+        raw1 = self.cfpga.read_int(self._get_regname(self._reg_pll_lock))
+        raw0 = raw0 >> 1
+        raw1 = raw1 >> 1
+        t0b = raw0 & (2**15 - 1)
+        t1b = raw1 & (2**15 - 1)
+        t0a = (raw0 >> 15) & (2**15 - 1)
+        t1a = (raw1 >> 15) & (2**15 - 1)
+        if t0a > t1a:
+            t1a += 2**15
+        if t0b > t1b:
+            t1b += 2**15
+        # Firmware counts in increments of 1024 clocks
+        fa_mhz = (t1a - t0a) / dt / 1e6 * 1024
+        fb_mhz = (t1b - t0b) / dt / 1e6 * 1024
+        return fa_mhz, fb_mhz
 
 
 def get_data(r, signed=True):
