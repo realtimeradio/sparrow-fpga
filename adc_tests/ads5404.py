@@ -43,7 +43,7 @@ class Ads5404():
         sleep(0.001)
         self.cfpga.write_int(self._get_regname(self._reg_rst), 0)
 
-    def chip_rst(self):
+    def chip_reset(self):
         self.cfpga.write_int(self._get_regname(self._reg_rst), 0)
         sleep(0.001)
         self.cfpga.write_int(self._get_regname(self._reg_rst), 2)
