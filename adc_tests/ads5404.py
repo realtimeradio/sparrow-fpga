@@ -10,11 +10,19 @@ class Ads5404():
     _reg_rst = 'ads5404_hardware_rst'
     _reg_pll_lock = 'ads5404_pll_lock'
     _reg_spi = 'ads5404_spi_controller'
+    _reg_power = 'sparrow_adc_en'
     def __init__(self, cfpga):
         self.cfpga = cfpga
 
     def _get_regname(self, reg):
         return reg
+
+    def power_enable(self):
+        self.cfpga.write_int(self._get_regname(self._reg_power), 1)
+        sleep(0.1)
+
+    def power_disable(self):
+        self.cfpga.write_int(self._get_regname(self._reg_power), 0)
 
     def enable_readback(self):
         self.write_spi(0, 1<<15)

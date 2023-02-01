@@ -1,7 +1,7 @@
 #! /bin/bash
 
 SPARROW_FPGA_PATH=/home/casper/src/sparrow-fpga
-SIFILE=Si5332-GM1-RevD-SPRW1-Registers-extref-pllcmos_in_phase50M_VCTCXOinput.txt
+SIFILE=Si5332-GM1-RevD-SPRW1-XtalIn-25MHzOut.txt
 PYTHON=/home/casper/python3-venv/bin/python
 
 cd $SPARROW_FPGA_PATH

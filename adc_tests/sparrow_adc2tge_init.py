@@ -14,7 +14,7 @@ def run(host, fpgfile,
         dest_mac='a0:48:1c:e0:41:98',
         skipprog=False,
         source_ip='10.100.100.100',
-				header=0,
+        header=0,
         ):
 
     logger = logging.getLogger(__file__)
@@ -76,6 +76,8 @@ if __name__ == '__main__':
                         help = 'Hostname / IP of Sparrow board')
     parser.add_argument('fpgfile', type=str, 
                         help = '.fpgfile to program or /read')
+    parser.add_argument('--adc_clk', type=float, default=500.0,
+                        help ='ADC sample rate in MHz')
     parser.add_argument('--use_wr_pps', action='store_true', default=False,
                         help ='Use this flag to sync the design from WR PPS pulses')
     parser.add_argument('-s', dest='sync', action='store_true', default=True,
@@ -102,5 +104,5 @@ if __name__ == '__main__':
         dest_mac=args.dest_mac,
         skipprog=args.skipprog,
         source_ip=args.source_ip,
-				header=args.header,
+        header=args.header,
         )
