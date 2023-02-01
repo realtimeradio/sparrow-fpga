@@ -37,8 +37,6 @@ def run(host, fpgfile,
     logger.info("Firmware build time: %s" % time.ctime(sparrow.get_build_time()))
     fpga_clock_mhz = sparrow.cfpga.estimate_fpga_clock()
     logger.info("Estimated FPGA clock is %.2f MHz" % fpga_clock_mhz)
-    adc_temp = sparrow.get_adc_temp()
-    logger.info("ADC temperature is %d C" % adc_temp)
 
     if fpga_clock_mhz < 1:
         raise RuntimeError("FPGA doesn't seem to be clocking correctly")
@@ -46,6 +44,8 @@ def run(host, fpgfile,
     sparrow.eth_disable() # Stop packet flow before reconfiguring
     logger.info("Initializing ADC")
     sparrow.initialize_adc()
+    adc_temp = sparrow.get_adc_temp()
+    logger.info("ADC temperature is %d C" % adc_temp)
     logger.info("Setting 16-bit header field to %d" % header)
     sparrow.set_header_field(header)
     logger.info("Setting packet source IP to %s" % source_ip)
