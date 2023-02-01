@@ -6,4 +6,4 @@
 	url = https://github.com/realtimeradio/quabo_firmware
 [submodule "adc_tests/pyadf435x"]
 	path = adc_tests/pyadf435x
-	url = https://github.com/jhol/pyadf435x
+	url = https://github.com/realtimeradio/pyadf435x
