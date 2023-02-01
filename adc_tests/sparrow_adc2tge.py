@@ -1,7 +1,9 @@
 import os
 import struct
+import time
 import numpy as np
 import ads5404
+import adf4351
 
 # Design register names
 ETH_NAMES = ["tge0", "tge1"]
@@ -16,7 +18,7 @@ def str2ip(ip):
 	return ipint
 
 class SparrowAdc2Tge():
-	def __init__(self, cfpga, fpgfile=None):
+	def __init__(self, cfpga, fpgfile=None, adc_clk=500.):
 		"""
 		Constuctor for SparrowAdc2Tge control instance.
 
@@ -27,9 +29,14 @@ class SparrowAdc2Tge():
 			none is provided, certain methods will be unavailable until
 			either `program_fpga` or `read_fpgfile` are called.
 		:type fpgfile: str
+
+                :param adc_clk: ADC sample rate in MHz
+                :type adc_clk: float
 		"""
 		self.cfpga = cfpga
+		self.adc_clk = adc_clk
 		self.adc = ads5404.Ads5404(cfpga)
+		self.pll = adf4351.Adf4351(cfpga, out_freq=adc_clk)
 		self.fpgfile = None
 		if fpgfile is not None:
 			self.read_fpgfile(fpgfile)
@@ -109,6 +116,9 @@ class SparrowAdc2Tge():
 		if self.fpgfile is None:
 			raise RuntimeError("Don't know what .fpg file to program!")
 		self.cfpga.upload_to_ram_and_program(self.fpgfile)
+		self.pll.configure()
+		time.sleep(0.3)
+		self.adc.power_enable()
 
 	def arm_timestamp_reset(self):
 		"""
