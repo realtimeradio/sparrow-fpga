@@ -13,7 +13,7 @@ class Adf4351():
 
     def configure(self):
         regs = self.get_regs()
-        for reg in regs:
+        for reg in regs[::-1]: # Program registers in order 5,4,3,2,1,0
             self.write_reg(reg)
 
     def get_regs(self):
