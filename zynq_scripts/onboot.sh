@@ -5,7 +5,7 @@ SIFILE=Si5332-GM1-RevD-SPRW1-XtalIn-25MHzOut.txt
 PYTHON=/home/casper/python3-venv/bin/python
 
 echo "Enabling fan"
-i2cset 0 0x74 0x3f
+i2cset -y 0 0x74 0x3f
 
 cd $SPARROW_FPGA_PATH
 cd adc_tests
