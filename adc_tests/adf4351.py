@@ -22,7 +22,7 @@ class Adf4351():
         regs = adf435x.make_regs(INT=INT, MOD=MOD, FRAC=FRAC,
                 output_divider=output_divider,
                 aux_output_select=adf435x.AuxOutputSelect.Fundamental,
-                aux_output_enable=True,
+                aux_output_enable=False,
                 band_select_clock_divider=band_select_clock_divider)
         return regs
 
