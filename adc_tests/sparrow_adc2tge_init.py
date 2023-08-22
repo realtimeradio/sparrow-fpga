@@ -7,6 +7,7 @@ import casperfpga
 from sparrow_adc2tge import SparrowAdc2Tge
 
 def run(host, fpgfile,
+        adc_clk=500,
         use_wr_pps=False,
         sync=True,
         dest_port=10000,
@@ -27,7 +28,7 @@ def run(host, fpgfile,
     cfpga = casperfpga.CasperFpga(host, transport=casperfpga.KatcpTransport)
 
     logger.info("Instantiating control object with fpgfile %s" % fpgfile)
-    sparrow = SparrowAdc2Tge(cfpga, fpgfile=fpgfile)
+    sparrow = SparrowAdc2Tge(cfpga, fpgfile=fpgfile, adc_clk=adc_clk)
 
     if not skipprog:
         logger.info("Programming FPGA at %s with %s" % (host, fpgfile))
@@ -97,6 +98,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     run(args.host, args.fpgfile,
+        adc_clk = args.adc_clk,
         use_wr_pps=args.use_wr_pps,
         sync=args.sync,
         dest_port=args.dest_port,
