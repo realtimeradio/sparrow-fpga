@@ -1,4 +1,8 @@
 *.log
 *.jou
 *.str
+*.autosave
+*.asv
+adc_tests/sparrow_adc2tge_xc7z0*.slx
+tge_tests/sfp4x_test_xc7z0*.slx
 startsg.local
