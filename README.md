@@ -61,14 +61,14 @@ build_model(filename, fpga);
 
 Allowed options for `filename` are:
 
-  - `adc_tests/sparrow_adc2tge.slx`
-  - `tge_tests/sfp4x_test.slx`
+  - `'adc_tests/sparrow_adc2tge.slx'`
+  - `'tge_tests/sfp4x_test.slx'`
 
 Allowed options for `fpga` are:
 
-  - 'xc7z030'
-  - 'xc7z035'
-  - 'xc7z045'
+  - `'xc7z030'`
+  - `'xc7z035'`
+  - `'xc7z045'`
 
 The build script will create a new model, with `_<fpga>` appended to the input model's filename, and build this using the CASPER flow.
 
