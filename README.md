@@ -24,11 +24,18 @@ git submodule init
 git submodule update
 ```
 
+## Repository Layout
+
+  1. `firmware/`: Directory containing simulink firmware source and related libraries and control scripts.
+  2. `petalinux/`: Directory containing Petalinux build configurations and instructions.
+  3. `zynq_scripts`: Directory containing scripts intended to be run on the Sparrow Zynq ARM CPU.
+
 ## Building Firmware
 
 ### Local configuration
 
-First, copy the local environment configuration file `startsg.local.rtr-dev3` and modify to reflect the installation paths of your software tools.
+  1. Navigate to the `firmware/` directory.
+  2. Copy the local environment configuration file `startsg.local.rtr-dev3` and modify to reflect the installation paths of your software tools.
 
 ### Starting Simulink
 

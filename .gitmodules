@@ -1,9 +1,9 @@
 [submodule "mlib_devel"]
-	path = mlib_devel
+	path = firmware/mlib_devel
 	url = git@github.com:realtimeradio/mlib_devel
 [submodule "quabo_firmware"]
-	path = quabo_firmware
+	path = firmware/quabo_firmware
 	url = https://github.com/realtimeradio/quabo_firmware
 [submodule "adc_tests/pyadf435x"]
-	path = adc_tests/pyadf435x
+	path = firmware/adc_tests/pyadf435x
 	url = https://github.com/realtimeradio/pyadf435x
