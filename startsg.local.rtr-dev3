@@ -1,0 +1,16 @@
+####### User to edit these accordingly ######
+export XILINX_PATH=/data/Xilinx/Vivado/2021.2
+export COMPOSER_PATH=/data/Xilinx/Model_Composer/2021.2
+export MATLAB_PATH=/data/MATLAB/R2021a
+export PLATFORM=lin64
+export JASPER_BACKEND=vivado
+export CASPER_SKIP_STARTUP_LOAD_SYSTEM=yesplease
+export XILINXD_LICENSE_FILE=/home/jackh/.Xilinx/Xilinx.lic
+# Set White Rabbit repo path
+export WR_QUABO_REPO_PATH=/home/jackh/src/sparrow-fpga/quabo_firmware/quabo_master/ip_repo/wr-cores-Quabo
+#############################################
+
+# over-ride the MATLAB libexpat version with the OS's one.
+# Using LD_PRELOAD=${LD_PRELOAD}:"..." rather than just LD_PRELOAD="..."
+# ensures that we preserve any other settings already configured
+export LD_PRELOAD=${LD_PRELOAD}:"/usr/lib/x86_64-linux-gnu/libexpat.so"
