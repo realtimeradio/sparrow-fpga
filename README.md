@@ -2,6 +2,8 @@
 
 This is the Sparrow-FPGA repository, containing code for building and running firmware on a Sparrow board using the CASPER toolflow.
 
+For more information about the Sparrow platform, including schematics, and OS image, see the [Sparrow website](https://realtimeradio.co.uk/hardware).
+
 ## Software Versions
 
 This repository was designed to use the following software versions:
@@ -9,7 +11,8 @@ This repository was designed to use the following software versions:
  - Ubuntu 20.04.6 LTS
  - Python 3.8.10
  - Matlab / Simulink 2021a
- - Vivado / Petalinux 2021.2
+ - Vivado 2021.2
+ - Petalinux 2021.2 (only required if building a new Linux OS)
 
 ## Cloning This Repository
 
@@ -45,7 +48,7 @@ Start Simulink with
 ./startsg startsg.local.rtr-dev3 #replace with the name of your new startsg.local file
 ```
 
-### Building Firmware
+### Compiling Firmware
 
 This repository contains two simple models.
 
