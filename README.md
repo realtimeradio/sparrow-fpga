@@ -11,7 +11,8 @@ This repository was designed to use the following software versions:
  - Ubuntu 20.04.6 LTS
  - Python 3.8.10
  - Matlab / Simulink 2021a
- - Vivado / Petalinux 2021.2
+ - Vivado 2021.2
+ - Petalinux 2021.2 (only required if building a new Linux OS)
 
 ## Cloning This Repository
 
