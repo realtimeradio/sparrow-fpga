@@ -2,6 +2,8 @@
 
 This is the Sparrow-FPGA repository, containing code for building and running firmware on a Sparrow board using the CASPER toolflow.
 
+For more information about the Sparrow platform, including schematics, and OS image, see the [Sparrow website](https://realtimeradio.co.uk/hardware).
+
 ## Software Versions
 
 This repository was designed to use the following software versions:
