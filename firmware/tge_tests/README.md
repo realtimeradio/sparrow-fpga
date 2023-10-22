@@ -9,7 +9,7 @@ To test:
  2. Execute the test script, configured for 4 SFP ports
 
     ```
-    python sfp_test.py -f sfp4x_test_xc7z035/outputs/sfp4x_test_xc7z035_2023-10-22_1349.fpg -n 4 --noct -P 128 -T 135 10.10.10.12
+    python sfp_test.py -f sfp4x_test_xc7z035/outputs/sfp4x_test_xc7z035_2023-10-22_1419.fpg -n 4 --noct -P 128 -T 135 10.10.10.12
     ```
 
     Be sure to provide an `fpg` file targetting the correct FPGA.
