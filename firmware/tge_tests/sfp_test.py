@@ -42,7 +42,7 @@ if __name__ == '__main__':
     p.add_argument('-n', '--ncores', type=int, default=8,
         help='Number of ethernet cores')  
     p.add_argument('-T', '--period', type=int, default=16384,
-        help='How often to send packets (in 155MHz FPGA clocks)')  
+        help='How often to send packets (in 100 MHz FPGA clocks)')  
     p.add_argument('-P', '--payload', type=int, default=128,
         help='Payload of each packet (in 64 bit words)')  
     p.add_argument('-a', '--arp', action='store_true',
