@@ -8,15 +8,15 @@ To test:
  1. Connect 10GbE cables between SFP+ ports 0 <--> 2, and 1 <--> 3
  2. Execute the test script, configured for 4 SFP ports
 
-  ```
-  python sfp_test.py -f sfp4x_test_xc7z035/outputs/sfp4x_test_xc7z035_2023-10-22_1349.fpg -n 4 --noct -P 128 -T 135 10.10.10.12
-  ```
+    ```
+    python sfp_test.py -f sfp4x_test_xc7z035/outputs/sfp4x_test_xc7z035_2023-10-22_1349.fpg -n 4 --noct -P 128 -T 135 10.10.10.12
+    ```
 
-  Be sure to provide an `fpg` file targetting the correct FPGA.
-  Data rate can be varied with the `-P` and `-T` parameters.
-  The former sets the payload size, in multiples of 8 bytes.
-  The latter sets how often a packet is transmitted in 100 MHz clock ticks.
-  The example above will yield a data rate of ~6 Gb/s on each interface.
+    Be sure to provide an `fpg` file targetting the correct FPGA.
+    Data rate can be varied with the `-P` and `-T` parameters.
+    The former sets the payload size, in multiples of 8 bytes.
+    The latter sets how often a packet is transmitted in 100 MHz clock ticks.
+    The example above will yield a data rate of ~6 Gb/s on each interface.
 
  3. Monitor the link for error stats. If things are working, the CRC error count should remain at 0, and the "missing" packet count,
     `tx-rx` should hover around zero. It may not always be exactly zero since sometimes packets may be in transit when the counters are polled.
