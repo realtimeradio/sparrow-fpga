@@ -1,10 +1,10 @@
-#!/bin/env ipython
+#!/bin/env python
 
 '''
-This script demonstrates programming an FPGA, configuring 10GbE cores and checking transmitted and received data using the Python KATCP library along with the katcp_wrapper distributed in the corr package. Designed for use with TUT3 at the 2009 CASPER workshop.
-\n\n 
+This script demonstrates programming an FPGA, configuring 10GbE cores and checking transmitted and received data.
+
 Author: Jason Manley, August 2009.
-Updated for CASPER 2013 workshop. This tut needs a rework to use new snap blocks and auto bit unpack.
+Modified: Jack Hickish, 2023
 '''
 import casperfpga, time, struct, sys, logging, socket
 
@@ -24,89 +24,88 @@ payload_len = 128   #how big to make each packet in 64bit words
 
 fabric_port=10000
 
-fpgfile = 'sfp4x_test.bof'
+fpgfile = 'sfp4x_test.fpg'
 fpga=[]
 
 if __name__ == '__main__':
-    from optparse import OptionParser
+    import argparse
 
-    p = OptionParser()
-    p.set_usage('tut2.py <ROACH_HOSTNAME_or_IP> [options]')
-    p.set_description(__doc__)
-    p.add_option('-p', '--noprogram', dest='noprogram', action='store_true',
+    p = argparse.ArgumentParser(
+        description = __doc__,
+        formatter_class = argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+    p.add_argument('-p', '--noprogram', dest='noprogram', action='store_true',
         help='Don\'t reprogram the fpga.')
-    p.add_option('-c', '--noct', dest='noct', action='store_true',
+    p.add_argument('-c', '--noct', action='store_true',
         help='Disable corner turn -- just send packets between pairs of ports.')
-    p.add_option('-n', '--ncores', dest='ncores', type='int', default=8,
+    p.add_argument('-n', '--ncores', type=int, default=8,
         help='Number of ethernet cores')  
-    p.add_option('-T', '--period', dest='period', type='int', default=16384,
+    p.add_argument('-T', '--period', type=int, default=16384,
         help='How often to send packets (in 155MHz FPGA clocks)')  
-    p.add_option('-P', '--payload', dest='payload', type='int', default=128,
+    p.add_argument('-P', '--payload', type=int, default=128,
         help='Payload of each packet (in 64 bit words)')  
-    p.add_option('-a', '--arp', dest='arp', action='store_true',
+    p.add_argument('-a', '--arp', action='store_true',
         help='Print the ARP table and other interesting bits.')  
-    p.add_option('-b', '--fpgfile', dest='bof', type='str', default=fpgfile,
-        help='Specify the bof file to load')  
-    opts, args = p.parse_args(sys.argv[1:])
+    p.add_argument('-f', '--fpgfile', type=str, default=fpgfile,
+        help='Specify the fpgfile file to load')  
+    p.add_argument('host', type=str,
+        help='IP of hostname of FPGA board')
+    args = p.parse_args()
 
-    if args==[]:
-        print('Please specify a ROACH board. \nExiting.')
-        exit()
-    else:
-        host = args[0]
-    if opts.bof != '':
-        fpgfile = opts.bof
-
-    print(('Connecting to server %s... '%(host)), end=' ')
-    fpga = casperfpga.CasperFpga(host, transport=casperfpga.KatcpTransport)
+    print(('Connecting to server %s... '%(args.host)), end=' ')
+    fpga = casperfpga.CasperFpga(args.host, transport=casperfpga.KatcpTransport)
 
     if fpga.is_connected():
         print('ok\n')
     else:
-        print('ERROR connecting to server %s.\n'%(host))
+        print('ERROR connecting to server %s.\n'%(args.host))
         exit()
-    
-    if not opts.noprogram:
+
+    if not args.noprogram:
+        
         print('------------------------')
         print('Programming FPGA...', end=' ')
         sys.stdout.flush()
-        fpga.upload_to_ram_and_program(fpgfile)
-        time.sleep(0.1)
+        fpga.upload_to_ram_and_program(args.fpgfile)
         print('ok')
-        time.sleep(10)
-    else:
-        fpga.get_system_information(fpgfile)
+
+    # Seemingly we have to call get_system_information
+    # here even if we have programmed (which should call it internally).
+    # Unclear why this is.
+    fpga.get_system_information(args.fpgfile)
 
     print('---------------------------')    
     print('Disabling output...', end=' ')
     sys.stdout.flush()
-    for i in range(opts.ncores):
+    for i in range(args.ncores):
        fpga.write_int('pkt_sim%d_enable'%i, 0)
     print('done')
 
     print('Resetting cores and counters...', end=' ')
     sys.stdout.flush()
     fpga.write_int('rst', 3)
+    fpga.write_int('rst', 0)
     print('done')
     print('---------------------------')    
 
     sys.stdout.flush()
-    for i in range(opts.ncores):
+    for i in range(args.ncores):
         print('Configuring core gbe%d'%i)
         gbe = fpga.gbes['gbe%d' % i]
         gbe.configure_core(mac_base+i,ip2str(base_ip+i),fabric_port)
-        for j in range(opts.ncores):
+        for j in range(args.ncores):
             gbe.set_single_arp_entry(ip2str(base_ip+j), mac_base+j)
 
     print('---------------------------')
 
     print('Setting-up packet source...', end=' ')
     sys.stdout.flush()
-    fpga.write_int('period',opts.period)
-    fpga.write_int('payload_len',opts.payload)
+    fpga.write_int('period',args.period)
+    fpga.write_int('payload_len',args.payload)
     print('done')
-    print('Enable corner turn?', not opts.noct)
-    fpga.write_int('ct_en', int(not opts.noct))
+    print('Enable corner turn?', not args.noct)
+    fpga.write_int('ct_en', int(not args.noct))
 
     print('Setting-up destination addresses...', end=' ')
     sys.stdout.flush()
@@ -116,7 +115,7 @@ if __name__ == '__main__':
     print('done')
 
     print('Enabling output...', end=' ')
-    for i in range(opts.ncores):
+    for i in range(args.ncores):
         sys.stdout.flush()
         fpga.write_int('pkt_sim%d_enable'%i, 1)
     print('done')
@@ -127,16 +126,16 @@ if __name__ == '__main__':
 
     fpga_rate = fpga.estimate_fpga_clock()
     print('fpga clock rate: %.2f'%fpga_rate)
-    packet_rate = fpga_rate*1e6/opts.period
-    bit_rate = packet_rate * 64 * (opts.payload+1) #plus one because crc is added to the end
-    total_bit_rate = packet_rate * (64*(opts.payload+1) + 54*8)
+    packet_rate = fpga_rate*1e6/args.period
+    bit_rate = packet_rate * 64 * (args.payload+1) #plus one because crc is added to the end
+    total_bit_rate = packet_rate * (64*(args.payload+1) + 54*8)
     print('Packet rate: %d packets/sec'%packet_rate)
     print('Bit rate: %d bits/sec (%.2fGb/s)'%(bit_rate, bit_rate/1e9))
     print('Bit rate (with overhead): %d bits/sec (%.2fGb/s)'%(total_bit_rate, total_bit_rate/1e9))
 
     while(True):
         try:
-            for i in range(opts.ncores):
+            for i in range(args.ncores):
                 sent = fpga.read_int('tx_frame_cnt%d'%i)
                 received = fpga.read_int('rx_frame_cnt%d'%i)
                 errors = fpga.read_int('rx_frame_err%d'%i)
