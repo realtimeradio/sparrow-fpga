@@ -7,7 +7,7 @@ export JASPER_BACKEND=vivado
 export CASPER_SKIP_STARTUP_LOAD_SYSTEM=yesplease
 export XILINXD_LICENSE_FILE=/home/jackh/.Xilinx/Xilinx.lic
 # Set White Rabbit repo path
-export WR_QUABO_REPO_PATH=/home/jackh/src/sparrow-fpga/quabo_firmware/quabo_master/ip_repo/wr-cores-Quabo
+export WR_QUABO_REPO_PATH=/home/jackh/src/sparrow-fpga/firmware/quabo_firmware/quabo_master/ip_repo/wr-cores-Quabo
 #############################################
 
 # over-ride the MATLAB libexpat version with the OS's one.
