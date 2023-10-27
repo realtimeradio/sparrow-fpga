@@ -25,10 +25,10 @@
 
   NB:
 
-    - Acceptable voltage levels are **10V to 25V**
-    - Typical power consumption is <20W for large designs, and <10W for small designs.
-      Size your power supply appropriately!
-    - If a fan is connected, it should start a few seconds after power is applied to Sparrow.
+  - Acceptable voltage levels are **10V to 25V**
+  - Typical power consumption is <20W for large designs, and <10W for small designs.
+  Size your power supply appropriately!
+- If a fan is connected, it should start a few seconds after power is applied to Sparrow.
     If it does not, there may be a software boot problem.
     Solve this before using the Sparrow to avoid the potential for overheating!
 
