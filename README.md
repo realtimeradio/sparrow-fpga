@@ -29,9 +29,10 @@ git submodule update
 
 ## Repository Layout
 
-  1. `firmware/`: Directory containing simulink firmware source and related libraries and control scripts.
-  2. `petalinux/`: Directory containing Petalinux build configurations and instructions.
-  3. `zynq_scripts/`: Directory containing scripts intended to be run on the Sparrow Zynq ARM CPU.
+  1. `docs/`: Basic Sparrow documentation. See, also, [the Sparrow website](https://realtimeradio.co.uk/hardware).
+  2. `firmware/`: Directory containing simulink firmware source and related libraries and control scripts.
+  3. `petalinux/`: Directory containing Petalinux build configurations and instructions.
+  4. `zynq_scripts/`: Directory containing scripts intended to be run on the Sparrow Zynq ARM CPU.
 
 ## Building Firmware
 
