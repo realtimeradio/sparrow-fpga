@@ -1,0 +1,84 @@
+/include/ "system-conf.dtsi"
+/ {
+};
+
+&sdhci0 {
+	status = "okay";
+  no-1-8-v;
+};
+
+&i2c0 {
+  status = "okay";
+  clock-frequency = <100000>;
+  eeprom@53 {
+  	compatible = "microchip,24c02", "atmel,24c02";
+    size = <256>;
+    read-only;
+  	reg = <0x53>;
+  	pagesize = <8>; // part fitted is 24AA02E48. Schematic shows 24AA025E48 (16-byte page)
+    #address-cells = <1>;
+    #size-cells = <1>;
+    mac_addr: mac_addr@FA {
+      reg = <0xFA 0x06>;
+    };
+  };
+  ina237@40 {
+    //compatible = "ti,ina237";
+    //reg = <0x40>;
+    //adc-config = <0>;
+    //config = <0>;
+    //current-lsb = <1>;
+    //rshunt = <5>;
+  };
+  silab@6a {
+    compatible = "generic";
+    reg = <0x6a>;
+  };
+  fancontroller@74 {
+    reg = <0x74>;
+  };
+};
+
+//&gem0 {
+//  //local-mac-address = <&mac_addr>;
+//  //nvmem-cells = <&mac_addr>;
+//  //nvmem-cell-names = "mac-address";
+//  phy-mode = "rgmii-id";
+//  phy-handle = <&ethernet_phy>;
+//  mdio {
+//    #address-cells = <1>;
+//    #size-cells = <0>;
+//    ethernet_phy: ethernet-phy@0 {
+//      compatible = "marvell,88e1512", "marvell,88e1510";
+//      reset-gpios = <&gpio0 0x32 0x1>;
+//      device_type = "ethernet-phy";
+//      reg = <0>;
+//      reset-assert-us = <10000>; /* Reset hold time in microseconds */
+//      reset-deassert-us = <1000>; /* Delay after reset release */
+//      //marvell,reg-init = <0x12 0x14 0xfff0 0x0 0x12 0x14 0x7fff 0x8000>;
+//    };
+//  };
+//};
+
+&gem1 {
+  status = "okay";
+  local-mac-address = <&mac_addr>;
+  nvmem-cells = <&mac_addr>;
+  nvmem-cell-names = "mac-address";
+  //phy-mode = "gmii";
+  phy-mode = "1000base-x";
+  //phy-handle = <&ethernet_phy2>;
+  //eth-reset = <&gpio0 0x32 0x1>;
+  fixed-link {
+    speed = <1000>;
+    full-duplex;
+  };
+};
+
+//&ethernet_phy {
+//    //compatible = "marvell,88e1510";
+//    reset-gpios = <&gpio0 0x32 0x1>;
+//    reset-assert-us = <10000>; /* Reset hold time in microseconds */
+//    reset-deassert-us = <1000>; /* Delay after reset release */
+//    reg = <0>;
+//};
